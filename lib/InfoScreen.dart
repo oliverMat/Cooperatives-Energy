@@ -1,17 +1,19 @@
-import 'package:cooperatives_energy/SplashScreen.dart';
+import 'package:cooperatives_energy/Person.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
-class PersonEntity extends StatefulWidget {
-  const PersonEntity({Key? key}) : super(key: key);
+import 'OffersScreen.dart';
+
+class InfoScreen extends StatefulWidget {
+  const InfoScreen({Key? key}) : super(key: key);
 
   @override
-  State<PersonEntity> createState() => _PersonEntityState();
+  State<InfoScreen> createState() => _InfoScreenState();
 }
 
-class _PersonEntityState extends State<PersonEntity> {
+class _InfoScreenState extends State<InfoScreen> {
   late final List<bool> _selectedOptions = <bool>[false, false];
 
   final TextEditingController _controllerName = TextEditingController(),
@@ -157,25 +159,26 @@ class _PersonEntityState extends State<PersonEntity> {
                           _validateMoney = _controllerMoney.text.isEmpty;
 
                           if (!_selectedOptions.contains(true)) {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text('Have a snack!'),
                             ));
                             return;
                           }
 
-                          if (_verifyFields()) {
-                            Navigator.of(context).pushReplacementNamed('/personEntity');
+                          if (!_verifyFields()) {
                             Navigator.of(context).pushReplacement(
-                              new MaterialPageRoute(
-                                settings: const RouteSettings(name: '/form'),
-                                builder: (context) => new SplashScreen(
-                                  email: 'myemail@flutter.com',
-                                  header: {'auth': '1234'},
-                                ),
+                              MaterialPageRoute(
+                                settings:
+                                    const RouteSettings(name: '/offersScreen'),
+                                builder: (context) => OffersScreen(
+                                    person: Person(
+                                        _controllerName.text,
+                                        _controllerMoney.text,
+                                        _selectedOptions[0])),
                               ),
                             );
                           }
-
                         });
                       },
                       child: const Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'PersonEntity.dart';
+import 'InfoScreen.dart';
+import 'OffersScreen.dart';
 import 'SplashScreen.dart';
 
 void main() {
@@ -22,10 +23,11 @@ void main() {
         onError: Colors.red,
       ),
     ),
-    initialRoute: '/splash',
+    initialRoute: '/splashScreen',
     routes: {
-      '/splash': (context) => const SplashScreen(),
-      '/personEntity': (context) => const PersonEntity(),
+      '/splashScreen': (context) => const SplashScreen(),
+      '/infoScreen': (context) => const InfoScreen(),
+      '/offersScreen': (context) => const OffersScreen(),
     },
   ));
 }
