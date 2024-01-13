@@ -23,7 +23,7 @@ void main() {
         onError: Colors.red,
       ),
     ),
-    initialRoute: '/splashScreen',
+    initialRoute: '/offersScreen',
     routes: {
       '/splashScreen': (context) => const SplashScreen(),
       '/infoScreen': (context) => const InfoScreen(),

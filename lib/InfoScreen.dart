@@ -1,8 +1,8 @@
-import 'package:cooperatives_energy/Person.dart';
+import 'package:cooperatives_energy/model/Person.dart';
+import 'package:cooperatives_energy/widgets/WidgetsCustoms.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'OffersScreen.dart';
 
@@ -31,16 +31,7 @@ class _InfoScreenState extends State<InfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
-        leading: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: SvgPicture.asset(
-            'assets/logo-amarelo.svg',
-          ),
-        ),
-        title: const Text('WATTIO', style: TextStyle(color: Colors.white)),
-      ),
+      appBar: WidgetsCustoms().appBar(context, "WATTIO"),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
