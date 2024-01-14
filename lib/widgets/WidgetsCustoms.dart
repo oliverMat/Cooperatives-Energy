@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WidgetsCustoms {
+
   AppBar appBar(BuildContext context, String text) {
     return AppBar(
       backgroundColor: Theme.of(context).backgroundColor,

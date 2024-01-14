@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
-  currency_text_input_formatter:
-    dependency: "direct main"
-    description:
-      name: currency_text_input_formatter
-      sha256: "27edf2ac1564c2968d711c1849562d668afb4fae2fe2f6a81e6c072f366fc2e5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.13"
   fake_async:
     dependency: transitive
     description:
@@ -94,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_masked_text2:
+    dependency: "direct main"
+    description:
+      name: flutter_masked_text2
+      sha256: "5ccf6f1f8b7b7a8025e3fbaea48bff0aa7e7e9512c723e26138a0b24f31ca4d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.1"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -108,7 +108,7 @@ packages:
     source: sdk
     version: "0.0.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf

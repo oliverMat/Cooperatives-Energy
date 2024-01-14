@@ -16,12 +16,12 @@ class InfoController {
   }
 
   String textRegex(String text) =>
-      text.replaceAll("R\$\:", "").split(".").join("").trim();
+      text.replaceAll("R\$\:", "").split(",").join("").trim();
 
   bool verifyRange(String text) {
     var value = textRegex(text);
 
-    if (double.parse(value) >= 1000 && double.parse(value) <= 100000) {
+    if (double.parse(value) >= 1000.00 && double.parse(value) <= 100000.00) {
       return true;
     } else {
       return false;

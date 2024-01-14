@@ -3,10 +3,9 @@ import 'package:cooperatives_energy/model/Offers.dart';
 import 'package:cooperatives_energy/model/Person.dart';
 import 'package:cooperatives_energy/util/ImageConstants.dart';
 import 'package:cooperatives_energy/widgets/WidgetsCustoms.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class OffersScreen extends StatefulWidget {
   final Person? person;
@@ -20,10 +19,8 @@ class OffersScreen extends StatefulWidget {
 class _OffersScreenState extends State<OffersScreen> {
   final _controller = OffersController();
 
-  final TextEditingController _controllerMoney = TextEditingController();
-
-  CarouselController buttonCarouselController = CarouselController();
-
+  final _controllerMoney = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' R\$: ');
 
   @override
   void initState() {
@@ -61,16 +58,8 @@ class _OffersScreenState extends State<OffersScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   filled: true,
                   fillColor: Theme.of(context).backgroundColor,
-                  hintText: r'R$: 1000',
                   labelText: 'Valor médio de energia',
                   errorText: _controller.isValidateMoney ? "Verifique o campo" : null),
-              inputFormatters: <TextInputFormatter>[
-                CurrencyTextInputFormatter(
-                  locale: 'pt-br',
-                  decimalDigits: 000000,
-                  symbol: r'R$:',
-                ),
-              ],
               keyboardType: TextInputType.number,
               onChanged: (text) {
                 setState(() {
@@ -107,14 +96,14 @@ class _OffersScreenState extends State<OffersScreen> {
 
                 return FlutterCarousel.builder(
                   options: CarouselOptions(
-                    showIndicator: true,
-                    slideIndicator: const CircularSlideIndicator(),
-                      onPageChanged: (int index, CarouselPageChangedReason reason) {
+                      showIndicator: true,
+                      slideIndicator: const CircularSlideIndicator(),
+                      onPageChanged:
+                          (int index, CarouselPageChangedReason reason) {
                         setState(() {
                           _controller.currentOffer = s.data![index];
                         });
-                      }
-                  ),
+                      }),
                   itemCount: s.data!.length,
                   itemBuilder: (BuildContext context, int itemIndex,
                           int pageViewIndex) =>
@@ -178,9 +167,8 @@ class _OffersScreenState extends State<OffersScreen> {
                 ),
                 onPressed: () {
                   setState(() {
-                    print(_controller.currentOffer);
-
-                    WidgetsCustoms().dialogBuilder(context, "Contratado", 'Voçe acaba de aceitar a oferta ${_controller.currentOffer.nome}');
+                    WidgetsCustoms().dialogBuilder(context, "Contratado",
+                        'Voçe acaba de aceitar a oferta ${_controller.currentOffer.nome}');
                   });
                 },
                 child: const Padding(

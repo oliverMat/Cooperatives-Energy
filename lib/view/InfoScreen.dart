@@ -1,8 +1,7 @@
 import 'package:cooperatives_energy/model/Person.dart';
 import 'package:cooperatives_energy/widgets/WidgetsCustoms.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 import '../controller/InfoController.dart';
 import 'OffersScreen.dart';
@@ -17,8 +16,10 @@ class InfoScreen extends StatefulWidget {
 class _InfoScreenState extends State<InfoScreen> {
   final _controller = InfoController();
 
-  final TextEditingController _controllerName = TextEditingController(),
-      _controllerMoney = TextEditingController();
+  final _controllerName = TextEditingController();
+
+  final _controllerMoney = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: ' R\$: ');
 
   @override
   void dispose() {
@@ -85,21 +86,12 @@ class _InfoScreenState extends State<InfoScreen> {
                         const EdgeInsets.only(left: 15, right: 15, top: 15),
                     child: TextField(
                       controller: _controllerMoney,
-                      decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          labelText: 'Valor Medio de energia',
-                          hintText: r'R$: 1000',
-                          errorText:
-                              _controller.validateMoney ? "Campo vazio" : null),
-                      inputFormatters: <TextInputFormatter>[
-                        CurrencyTextInputFormatter(
-                          locale: 'pt-br',
-                          decimalDigits: 000000,
-                          symbol: r'R$:',
-                        ),
-                      ],
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        labelText: 'Valor Medio de energia',
+                      ),
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -178,10 +170,11 @@ class _InfoScreenState extends State<InfoScreen> {
                               ),
                             );
                           } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                                backgroundColor: Colors.black87,
-                                content: Text('Valor Medio deve ser entre R\$: 1000,00 e R\$: 100.000,00')));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.black87,
+                                    content: Text(
+                                        'Valor Medio deve ser entre R\$: 1000,00 e R\$: 100.000,00')));
                           }
                         });
                       },

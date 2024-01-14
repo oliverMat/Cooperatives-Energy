@@ -28,8 +28,7 @@ class OffersController {
   }
 
   Future<List<Offer>> listOffersFilter(String currentValue) async {
-    var value = double.parse(
-        currentValue.replaceAll("R\$\:", "").split(".").join("").trim());
+    var value = double.parse(textRegex(currentValue));
 
     List<Offer> list = await _listAllOffers();
 
@@ -68,7 +67,7 @@ class OffersController {
   String toFormat(String text) => _formatter.format(num.parse(text)).toString();
 
   String textRegex(String text) =>
-      text.replaceAll("R\$\:", "").split(".").join("").trim();
+      text.replaceAll("R\$\:", "").split(",").join("");
 
   String annualAverage(String value, String text) {
     if (verifyRangeValue(text)) {
@@ -89,7 +88,7 @@ class OffersController {
   void setNewFilter(String text) {
     var value = textRegex(text);
 
-    if (double.parse(value) >= 1000 && double.parse(value) <= 100000) {
+    if (double.parse(value) >= 1000.00 && double.parse(value) <= 100000.00) {
       getOffersListFuture = listOffersFilter(value);
     }
   }
@@ -101,7 +100,7 @@ class OffersController {
       return false;
     }
 
-    return (double.parse(value) >= 1000 && double.parse(value) <= 100000);
+    return (double.parse(value) >= 1000.00 && double.parse(value) <= 100000.00);
   }
 
   String fisicaOuJurisica(bool isPhysicalPerson) {
