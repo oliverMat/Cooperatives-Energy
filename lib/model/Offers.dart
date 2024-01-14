@@ -12,6 +12,7 @@ class Offer {
   final String valorMinimoMensal;
   final String ValorMaximoMensal;
   final String desconto;
+  final String fisicaOuJurisica;
   final String imagen;
 
   const Offer({
@@ -19,6 +20,7 @@ class Offer {
     required this.valorMinimoMensal,
     required this.ValorMaximoMensal,
     required this.desconto,
+    required this.fisicaOuJurisica,
     required this.imagen,
   });
 
@@ -28,6 +30,7 @@ class Offer {
       valorMinimoMensal: json['valorMinimoMensal'] as String,
       ValorMaximoMensal: json['ValorMaximoMensal'] as String,
       desconto: json['desconto'] as String,
+      fisicaOuJurisica: json['fisicaOuJurisica'] as String,
       imagen: json['imagen'] as String,
     );
   }

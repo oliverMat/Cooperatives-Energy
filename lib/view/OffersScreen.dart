@@ -27,7 +27,7 @@ class _OffersScreenState extends State<OffersScreen> {
 
   @override
   void initState() {
-    _controller.init(widget.person!.money);
+    _controller.init(widget.person!.money, widget.person!.isPhysicalPerson);
 
     _controllerMoney.text = widget.person!.money;
 
@@ -63,7 +63,7 @@ class _OffersScreenState extends State<OffersScreen> {
                   fillColor: Theme.of(context).backgroundColor,
                   hintText: r'R$: 1000',
                   labelText: 'Valor médio de energia',
-                  errorText: _controller.validateMoney ? "Verifique o campo" : null),
+                  errorText: _controller.isValidateMoney ? "Verifique o campo" : null),
               inputFormatters: <TextInputFormatter>[
                 CurrencyTextInputFormatter(
                   locale: 'pt-br',
@@ -76,9 +76,9 @@ class _OffersScreenState extends State<OffersScreen> {
                 setState(() {
                   if (_controller.verifyRangeValue(text)) {
                     _controller.setNewFilter(text);
-                    _controller.validateMoney = false;
+                    _controller.isValidateMoney = false;
                   } else {
-                    _controller.validateMoney = true;
+                    _controller.isValidateMoney = true;
                   }
                 });
               },
@@ -142,8 +142,8 @@ class _OffersScreenState extends State<OffersScreen> {
                                   ImageConstants()
                                       .decodeBase64(s.data![itemIndex].imagen)),
                               const Spacer(),
-                              const Text(
-                                'Para sua: casa ou empresa ',
+                              Text(
+                                'Pessoa: ${_controller.personType} ',
                                 style: TextStyle(
                                     fontSize: 18.0, color: Colors.black),
                               ),
@@ -180,7 +180,7 @@ class _OffersScreenState extends State<OffersScreen> {
                   setState(() {
                     print(_controller.currentOffer);
 
-                    _dialogBuilder(context);
+                    WidgetsCustoms().dialogBuilder(context, "Contratado", 'Voçe acaba de aceitar a oferta ${_controller.currentOffer.nome}');
                   });
                 },
                 child: const Padding(
@@ -193,46 +193,6 @@ class _OffersScreenState extends State<OffersScreen> {
           ),
         ],
       )),
-    );
-  }
-
-  Future<void> _dialogBuilder(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Contratado'),
-          content: Text(
-            'Voçe acaba de aceitar a oferta ${_controller.currentOffer.nome}',
-          ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme
-                    .of(context)
-                    .textTheme
-                    .labelLarge,
-              ),
-              child: const Text('Disable'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme
-                    .of(context)
-                    .textTheme
-                    .labelLarge,
-              ),
-              child: const Text('Enable'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

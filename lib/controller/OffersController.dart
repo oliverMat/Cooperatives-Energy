@@ -8,15 +8,16 @@ class OffersController {
 
   final _formatter = NumberFormat('#,###,###.00');
 
-  bool validateMoney = false;
-
+  bool isValidateMoney = false;
   late Offer currentOffer;
+  late String personType;
 
-  void init(String text) {
+  void init(String text, bool isPhysicalPerson) {
+    personType = fisicaOuJurisica(isPhysicalPerson);
     getOffersListFuture = listOffersFilter(textRegex(text));
   }
 
-  Future<List<Offer>> listAllOffers() async {
+  Future<List<Offer>> _listAllOffers() async {
     var response = await rootBundle.loadString("assets/offers.json");
 
     if (response.isNotEmpty) {
@@ -30,12 +31,13 @@ class OffersController {
     var value = double.parse(
         currentValue.replaceAll("R\$\:", "").split(".").join("").trim());
 
-    List<Offer> list = await listAllOffers();
+    List<Offer> list = await _listAllOffers();
 
     return list
         .where((element) =>
             double.parse(element.valorMinimoMensal) <= value &&
-            double.parse(element.ValorMaximoMensal) >= value)
+            double.parse(element.ValorMaximoMensal) >= value &&
+            personType == element.fisicaOuJurisica)
         .toList();
   }
 
@@ -100,5 +102,13 @@ class OffersController {
     }
 
     return (double.parse(value) >= 1000 && double.parse(value) <= 100000);
+  }
+
+  String fisicaOuJurisica(bool isPhysicalPerson) {
+    if (isPhysicalPerson) {
+      return "fisica";
+    } else {
+      return "juridica";
+    }
   }
 }
