@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WidgetsCustoms {
-
-  AppBar appBar(BuildContext context, String text) {
+  AppBar appBar(BuildContext context, String text,
+      {bool showBackPress = false}) {
     return AppBar(
       backgroundColor: Theme.of(context).backgroundColor,
-      leading: Padding(
-        padding: const EdgeInsets.all(13.0),
-        child: SvgPicture.asset(
+      leading: showBackPress
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacementNamed('/infoScreen'),
+            )
+          : null,
+      title: Row(children: [
+        SvgPicture.asset(
+          width: 25,
           'assets/logo-amarelo.svg',
         ),
-      ),
-      title: Text(text, style: const TextStyle(color: Colors.white)),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(text, style: const TextStyle(color: Colors.white))
+      ]),
     );
   }
 

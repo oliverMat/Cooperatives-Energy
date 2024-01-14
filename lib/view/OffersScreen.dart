@@ -40,10 +40,10 @@ class _OffersScreenState extends State<OffersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetsCustoms().appBar(context, "Olá ${widget.person!.name}"),
+      appBar: WidgetsCustoms()
+          .appBar(context, "Olá ${widget.person!.name}", showBackPress: true),
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-          child: Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -59,7 +59,8 @@ class _OffersScreenState extends State<OffersScreen> {
                   filled: true,
                   fillColor: Theme.of(context).backgroundColor,
                   labelText: 'Valor médio de energia',
-                  errorText: _controller.isValidateMoney ? "Verifique o campo" : null),
+                  errorText:
+                      _controller.isValidateMoney ? "Verifique o campo" : null),
               keyboardType: TextInputType.number,
               onChanged: (text) {
                 setState(() {
@@ -133,7 +134,7 @@ class _OffersScreenState extends State<OffersScreen> {
                               const Spacer(),
                               Text(
                                 'Pessoa: ${_controller.personType} ',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 18.0, color: Colors.black),
                               ),
                               Text(
@@ -173,14 +174,14 @@ class _OffersScreenState extends State<OffersScreen> {
                 },
                 child: const Padding(
                   padding:
-                      EdgeInsets.only(right: 100, left: 100, top: 5, bottom: 5),
-                  child: Text('Contratar', style: TextStyle(fontSize: 16)),
+                      EdgeInsets.only(right: 35, left: 35, top: 5, bottom: 5),
+                  child: Text('Contratar', style: TextStyle(fontSize: 16, color: Colors.black)),
                 ),
               ),
             ),
           ),
         ],
-      )),
+      ),
     );
   }
 }

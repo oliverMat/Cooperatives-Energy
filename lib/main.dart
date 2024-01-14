@@ -1,8 +1,7 @@
-import 'package:cooperatives_energy/view/OffersScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'view/InfoScreen.dart';
-import 'view/SplashScreen.dart';
+import 'view/OffersScreen.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -11,8 +10,8 @@ void main() {
       useMaterial3: true,
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
-        primary: Colors.black,
-        onPrimary: Colors.black,
+        primary: Colors.grey,
+        onPrimary: Colors.grey,
         secondary: Colors.grey,
         onSecondary: Colors.grey,
         background: Color(0xFF00303F),
@@ -25,7 +24,6 @@ void main() {
     ),
     initialRoute: '/infoScreen',
     routes: {
-      '/splashScreen': (context) => const SplashScreen(),
       '/infoScreen': (context) => const InfoScreen(),
       '/offersScreen': (context) => const OffersScreen(),
     },
