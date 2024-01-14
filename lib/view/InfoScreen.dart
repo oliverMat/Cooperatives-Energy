@@ -4,8 +4,8 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../controller/InfoController.dart';
 import 'OffersScreen.dart';
-
 
 class InfoScreen extends StatefulWidget {
   const InfoScreen({Key? key}) : super(key: key);
@@ -15,12 +15,10 @@ class InfoScreen extends StatefulWidget {
 }
 
 class _InfoScreenState extends State<InfoScreen> {
-  late final List<bool> _selectedOptions = <bool>[false, false];
+  final _controller = InfoController();
 
   final TextEditingController _controllerName = TextEditingController(),
       _controllerMoney = TextEditingController();
-
-  bool _validateName = false, _validateMoney = false;
 
   @override
   void dispose() {
@@ -77,7 +75,8 @@ class _InfoScreenState extends State<InfoScreen> {
                                 BorderRadius.all(Radius.circular(15))),
                         labelText: 'Nome',
                         hintText: 'Maria',
-                        errorText: _validateName ? "Campo vazio" : null,
+                        errorText:
+                            _controller.validateName ? "Campo vazio" : null,
                       ),
                     ),
                   ),
@@ -90,9 +89,10 @@ class _InfoScreenState extends State<InfoScreen> {
                           border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
-                          labelText: 'Valor Medio',
+                          labelText: 'Valor Medio de energia',
                           hintText: r'R$: 1000',
-                          errorText: _validateMoney ? "Campo vazio" : null),
+                          errorText:
+                              _controller.validateMoney ? "Campo vazio" : null),
                       inputFormatters: <TextInputFormatter>[
                         CurrencyTextInputFormatter(
                           locale: 'pt-br',
@@ -108,16 +108,16 @@ class _InfoScreenState extends State<InfoScreen> {
                     child: Text("Para sua casa ou empresa?"),
                   ),
                   ToggleButtons(
-                    isSelected: _selectedOptions,
+                    isSelected: _controller.selectedOptions,
                     onPressed: (int index) {
                       setState(() {
                         for (int buttonIndex = 0;
-                            buttonIndex < _selectedOptions.length;
+                            buttonIndex < _controller.selectedOptions.length;
                             buttonIndex++) {
                           if (buttonIndex == index) {
-                            _selectedOptions[buttonIndex] = true;
+                            _controller.selectedOptions[buttonIndex] = true;
                           } else {
-                            _selectedOptions[buttonIndex] = false;
+                            _controller.selectedOptions[buttonIndex] = false;
                           }
                         }
                       });
@@ -147,18 +147,25 @@ class _InfoScreenState extends State<InfoScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          _validateName = _controllerName.text.isEmpty;
-                          _validateMoney = _controllerMoney.text.isEmpty;
+                          _controller.validateName =
+                              _controllerName.text.isEmpty;
+                          _controller.validateMoney =
+                              _controllerMoney.text.isEmpty;
 
-                          if (!_selectedOptions.contains(true)) {
+                          if (!_controller.selectedOptions.contains(true)) {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
-                              content: Text('Have a snack!'),
+                              backgroundColor: Colors.black87,
+                              content: Text('Para sua casa ou empresa ?'),
                             ));
                             return;
                           }
 
-                          if (!_verifyFields()) {
+                          if (_controller.verifyFields()) {
+                            return;
+                          }
+
+                          if (_controller.verifyRange(_controllerMoney.text)) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 settings:
@@ -167,9 +174,14 @@ class _InfoScreenState extends State<InfoScreen> {
                                     person: Person(
                                         _controllerName.text,
                                         _controllerMoney.text,
-                                        _selectedOptions[0])),
+                                        _controller.selectedOptions[0])),
                               ),
                             );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                                backgroundColor: Colors.black87,
+                                content: Text('Valor Medio deve ser entre R\$: 1000,00 e R\$: 100.000,00')));
                           }
                         });
                       },
@@ -188,17 +200,5 @@ class _InfoScreenState extends State<InfoScreen> {
         ),
       ),
     );
-  }
-
-  bool _verifyFields() {
-    if (!_validateName) {
-      return false;
-    }
-
-    if (!_validateMoney) {
-      return false;
-    }
-
-    return true;
   }
 }

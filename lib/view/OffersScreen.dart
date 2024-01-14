@@ -1,6 +1,7 @@
 import 'package:cooperatives_energy/controller/OffersController.dart';
 import 'package:cooperatives_energy/model/Offers.dart';
 import 'package:cooperatives_energy/model/Person.dart';
+import 'package:cooperatives_energy/util/ImageConstants.dart';
 import 'package:cooperatives_energy/widgets/WidgetsCustoms.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
@@ -33,113 +34,136 @@ class _OffersScreenState extends State<OffersScreen> {
   }
 
   @override
+  void dispose() {
+    _controllerMoney.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WidgetsCustoms().appBar(context, widget.person!.name),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
-            controller: _controllerMoney,
-            style: const TextStyle(color: Colors.white, fontSize: 25),
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Theme.of(context).backgroundColor,
-                hintText: r'R$: 1000',
-                errorText: _validateMoney ? "Campo vazio" : null),
-            inputFormatters: <TextInputFormatter>[
-              CurrencyTextInputFormatter(
-                locale: 'pt-br',
-                decimalDigits: 000000,
-                symbol: r'R$:',
-              ),
-            ],
-            keyboardType: TextInputType.number,
-            onChanged: (text) {
-              setState(() {
-                if (_controller.verifyRangeValue(text)) {
-                  _controller.setNewFilter(text);
-                  _validateMoney = false;
-                } else {
-                  _validateMoney = true;
-                }
-              });
-            },
+          Padding(
+            padding: const EdgeInsets.only(left: 28, right: 28, top: 15),
+            child: TextField(
+              controller: _controllerMoney,
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  filled: true,
+                  fillColor: Theme.of(context).backgroundColor,
+                  hintText: r'R$: 1000',
+                  labelText: 'Valor médio de energia',
+                  errorText: _validateMoney ? "Verifique o campo" : null),
+              inputFormatters: <TextInputFormatter>[
+                CurrencyTextInputFormatter(
+                  locale: 'pt-br',
+                  decimalDigits: 000000,
+                  symbol: r'R$:',
+                ),
+              ],
+              keyboardType: TextInputType.number,
+              onChanged: (text) {
+                setState(() {
+                  if (_controller.verifyRangeValue(text)) {
+                    _controller.setNewFilter(text);
+                    _validateMoney = false;
+                  } else {
+                    _validateMoney = true;
+                  }
+                });
+              },
+            ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(
+            height: 30,
+          ),
+          const Center(
+            child: Text(
+              'Ofertas',
+              style: TextStyle(fontSize: 16, color: Colors.amber),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: FutureBuilder(
               future: _controller.getOffersListFuture,
               builder: (BuildContext context, AsyncSnapshot<List<Offer>> s) {
                 if (s.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 }
-            
+
                 return FlutterCarousel.builder(
                   options: CarouselOptions(
-                    height: 300.0,
+                    showIndicator: true,
+                    slideIndicator: const CircularSlideIndicator(),
                   ),
                   itemCount: s.data!.length,
-                  itemBuilder:
-                      (BuildContext context, int itemIndex, int pageViewIndex) =>
-                          Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.symmetric(horizontal: 10),
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Oferta ${itemIndex + 1}',
-                                      style: const TextStyle(
-                                          fontSize: 20, color: Colors.amber),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      'Coperativa: ${s.data![itemIndex].nome}',
-                                      style: const TextStyle(
-                                          fontSize: 18.0, color: Colors.black),
-                                    ),
-                                    const Text(
-                                      'Para sua: casa ou empresa ',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.black),
-                                    ),
-                                    Text(
-                                      'Economia: ${_controller.descontoFormat(s.data![itemIndex].desconto)}',
-                                      style: const TextStyle(
-                                          fontSize: 18.0, color: Colors.black),
-                                    ),
-                                    Text(
-                                        "Economia Anual: R\$: ${_controller.annualSavings(s.data![itemIndex].desconto, _controllerMoney.text)}",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 18.0, color: Colors.black)),
-                                    Text(
-                                        "Media por mes: R\$: ${_controller.annualAverage(_controller.annualSavings(s.data![itemIndex].desconto, _controllerMoney.text))}",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 18.0, color: Colors.black)),
-                                  ],
-                                ),
-                              )),
+                  itemBuilder: (BuildContext context, int itemIndex,
+                          int pageViewIndex) =>
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 10, bottom: 30),
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                s.data![itemIndex].nome,
+                                style: const TextStyle(
+                                    fontSize: 22, color: Colors.black),
+                              ),
+                              const SizedBox(height: 10),
+                              Image.memory(
+                                  gaplessPlayback: true,
+                                  scale: 4,
+                                  ImageConstants()
+                                      .decodeBase64(s.data![itemIndex].imagen)),
+                              const Spacer(),
+                              const Text(
+                                'Para sua: casa ou empresa ',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.black),
+                              ),
+                              Text(
+                                'Economia: ${_controller.descontoFormat(s.data![itemIndex].desconto)}',
+                                style: const TextStyle(
+                                    fontSize: 18.0, color: Colors.black),
+                              ),
+                              Text(
+                                  "Economia Anual: R\$: ${_controller.annualSavings(s.data![itemIndex].desconto, _controllerMoney.text)}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 18.0, color: Colors.black)),
+                              Text(
+                                  "Media por mes: R\$: ${_controller.annualAverage(s.data![itemIndex].desconto, _controllerMoney.text)}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 18.0, color: Colors.black)),
+                              const SizedBox(height: 20),
+                            ],
+                          )),
                 );
               },
             ),
           ),
-          const SizedBox(height: 20),
           Expanded(
-            flex: 2,
             child: Center(
               child: TextButton(
                 style: ButtonStyle(

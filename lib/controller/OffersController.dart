@@ -1,9 +1,12 @@
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../model/Offers.dart';
 
 class OffersController {
   late Future<List<Offer>> getOffersListFuture;
+
+  final _formatter = NumberFormat('#,###,###.00');
 
   void init(String text) {
     getOffersListFuture = listOffersFilter(textRegex(text));
@@ -43,20 +46,38 @@ class OffersController {
   }
 
   String annualSavings(String value, String text) {
-    var desconto = double.parse("0$value");
+    if (verifyRangeValue(text)) {
+      var desconto = double.parse("0$value");
 
-    var money = double.parse(textRegex(text));
+      var money = double.parse(textRegex(text));
 
-    var annualValue = money * 12;
+      var annualValue = money * 12;
 
-    return (desconto * annualValue).toString();
+      return _formatter.format(desconto * annualValue).toString();
+    } else {
+      return "0";
+    }
   }
+
+  String toFormat(String text) => _formatter.format(num.parse(text)).toString();
 
   String textRegex(String text) =>
       text.replaceAll("R\$\:", "").split(".").join("").trim();
 
-  String annualAverage(String value) {
-    return (double.parse(value) / 12).toString();
+  String annualAverage(String value, String text) {
+    if (verifyRangeValue(text)) {
+      var desconto = double.parse("0$value");
+
+      var money = double.parse(textRegex(text));
+
+      var annualValue = money * 12;
+
+      var v = desconto * annualValue;
+
+      return _formatter.format(v / 12).toString();
+    } else {
+      return "0";
+    }
   }
 
   void setNewFilter(String text) {
@@ -69,6 +90,10 @@ class OffersController {
 
   bool verifyRangeValue(String text) {
     var value = textRegex(text);
+
+    if (value.isEmpty) {
+      return false;
+    }
 
     return (double.parse(value) >= 1000 && double.parse(value) <= 100000);
   }

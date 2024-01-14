@@ -12,12 +12,14 @@ class Offer {
   final String valorMinimoMensal;
   final String ValorMaximoMensal;
   final String desconto;
+  final String imagen;
 
   const Offer({
     required this.nome,
     required this.valorMinimoMensal,
     required this.ValorMaximoMensal,
     required this.desconto,
+    required this.imagen,
   });
 
   factory Offer.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class Offer {
       valorMinimoMensal: json['valorMinimoMensal'] as String,
       ValorMaximoMensal: json['ValorMaximoMensal'] as String,
       desconto: json['desconto'] as String,
+      imagen: json['imagen'] as String,
     );
   }
 }
