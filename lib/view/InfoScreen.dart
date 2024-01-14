@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'OffersScreen.dart';
 
+
 class InfoScreen extends StatefulWidget {
   const InfoScreen({Key? key}) : super(key: key);
 

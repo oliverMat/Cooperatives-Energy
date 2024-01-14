@@ -1,8 +1,8 @@
+import 'package:cooperatives_energy/view/OffersScreen.dart';
 import 'package:flutter/material.dart';
 
-import 'InfoScreen.dart';
-import 'OffersScreen.dart';
-import 'SplashScreen.dart';
+import 'view/InfoScreen.dart';
+import 'view/SplashScreen.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,7 +23,7 @@ void main() {
         onError: Colors.red,
       ),
     ),
-    initialRoute: '/offersScreen',
+    initialRoute: '/infoScreen',
     routes: {
       '/splashScreen': (context) => const SplashScreen(),
       '/infoScreen': (context) => const InfoScreen(),
