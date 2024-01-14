@@ -8,6 +8,10 @@ class OffersController {
 
   final _formatter = NumberFormat('#,###,###.00');
 
+  bool validateMoney = false;
+
+  late Offer currentOffer;
+
   void init(String text) {
     getOffersListFuture = listOffersFilter(textRegex(text));
   }

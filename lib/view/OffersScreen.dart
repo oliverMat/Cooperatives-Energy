@@ -22,7 +22,8 @@ class _OffersScreenState extends State<OffersScreen> {
 
   final TextEditingController _controllerMoney = TextEditingController();
 
-  bool _validateMoney = false;
+  CarouselController buttonCarouselController = CarouselController();
+
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class _OffersScreenState extends State<OffersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetsCustoms().appBar(context, widget.person!.name),
+      appBar: WidgetsCustoms().appBar(context, "Olá ${widget.person!.name}"),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Column(
@@ -62,7 +63,7 @@ class _OffersScreenState extends State<OffersScreen> {
                   fillColor: Theme.of(context).backgroundColor,
                   hintText: r'R$: 1000',
                   labelText: 'Valor médio de energia',
-                  errorText: _validateMoney ? "Verifique o campo" : null),
+                  errorText: _controller.validateMoney ? "Verifique o campo" : null),
               inputFormatters: <TextInputFormatter>[
                 CurrencyTextInputFormatter(
                   locale: 'pt-br',
@@ -75,9 +76,9 @@ class _OffersScreenState extends State<OffersScreen> {
                 setState(() {
                   if (_controller.verifyRangeValue(text)) {
                     _controller.setNewFilter(text);
-                    _validateMoney = false;
+                    _controller.validateMoney = false;
                   } else {
-                    _validateMoney = true;
+                    _controller.validateMoney = true;
                   }
                 });
               },
@@ -108,6 +109,11 @@ class _OffersScreenState extends State<OffersScreen> {
                   options: CarouselOptions(
                     showIndicator: true,
                     slideIndicator: const CircularSlideIndicator(),
+                      onPageChanged: (int index, CarouselPageChangedReason reason) {
+                        setState(() {
+                          _controller.currentOffer = s.data![index];
+                        });
+                      }
                   ),
                   itemCount: s.data!.length,
                   itemBuilder: (BuildContext context, int itemIndex,
@@ -171,7 +177,11 @@ class _OffersScreenState extends State<OffersScreen> {
                       MaterialStateProperty.all<Color>(Colors.yellow),
                 ),
                 onPressed: () {
-                  setState(() {});
+                  setState(() {
+                    print(_controller.currentOffer);
+
+                    _dialogBuilder(context);
+                  });
                 },
                 child: const Padding(
                   padding:
@@ -183,6 +193,46 @@ class _OffersScreenState extends State<OffersScreen> {
           ),
         ],
       )),
+    );
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Contratado'),
+          content: Text(
+            'Voçe acaba de aceitar a oferta ${_controller.currentOffer.nome}',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme
+                    .of(context)
+                    .textTheme
+                    .labelLarge,
+              ),
+              child: const Text('Disable'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme
+                    .of(context)
+                    .textTheme
+                    .labelLarge,
+              ),
+              child: const Text('Enable'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
